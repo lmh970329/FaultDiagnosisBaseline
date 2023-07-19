@@ -1,8 +1,8 @@
 import torch
 
-import fdob
-import fdob.model
-import fdob.processing
+from . import fdob
+from .fdob import model
+from .fdob import processing
 
 hparam = {
     "sgd": {
@@ -41,43 +41,48 @@ hparam = {
 
 model = {
     "stimcnn": {
-        "model": fdob.model.STIMCNN,
+        "model": model.STIMCNN,
         "sample_length": 784,
-        "tf": [fdob.processing.NpToTensor(), fdob.processing.ToImage(28, 28, 1)],
+        "tf": [processing.NpToTensor(), processing.ToImage(28, 28, 1)],
     },
     "stftcnn": {
-        "model": fdob.model.STFTCNN,
+        "model": model.STFTCNN,
         "sample_length": 512,
         "tf": [
-            fdob.processing.STFT(window_length=128, noverlap=120, nfft=128),
-            fdob.processing.Resize(64, 64),
-            fdob.processing.NpToTensor(),
-            fdob.processing.ToImage(64, 64, 1),
+            processing.STFT(window_length=128, noverlap=120, nfft=128),
+            processing.Resize(64, 64),
+            processing.NpToTensor(),
+            processing.ToImage(64, 64, 1),
         ],
     },
     "wdcnn": {
-        "model": fdob.model.WDCNN,
+        "model": model.WDCNN,
         "sample_length": 2048,
-        "tf": [fdob.processing.NpToTensor(), fdob.processing.ToSignal()],
+        "tf": [processing.NpToTensor(), processing.ToSignal()],
     },
     "wdcnnrnn": {
-        "model": fdob.model.WDCNNRNN,
+        "model": model.WDCNNRNN,
         "sample_length": 4096,
-        "tf": [fdob.processing.NpToTensor(), fdob.processing.ToSignal()],
+        "tf": [processing.NpToTensor(), processing.ToSignal()],
     },
     "ticnn": {
-        "model": fdob.model.TICNN,
+        "model": model.TICNN,
         "sample_length": 2048,
-        "tf": [fdob.processing.NpToTensor(), fdob.processing.ToSignal()],
+        "tf": [processing.NpToTensor(), processing.ToSignal()],
     },
     "dcn": {
-        "model": fdob.model.DCN,
+        "model": model.DCN,
         "sample_length": 784,
-        "tf": [fdob.processing.NpToTensor(), fdob.processing.ToSignal()],
+        "tf": [processing.NpToTensor(), processing.ToSignal()],
     },
     "srdcnn": {
-        "model": fdob.model.SRDCNN,
+        "model": model.SRDCNN,
         "sample_length": 1024,
-        "tf": [fdob.processing.NpToTensor(), fdob.processing.ToSignal()],
+        "tf": [processing.NpToTensor(), processing.ToSignal()],
     },
+    "transformer": {
+        "model": model.BaselineTransformer,
+        "sample_length": 2048,
+        "tf": [processing.NpToTensor(), processing.ToSignal()],
+    }
 }

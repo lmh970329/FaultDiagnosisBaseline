@@ -5,5 +5,6 @@ from .srdcnn import SRDCNN
 from .stimcnn import STIMCNN
 from .stftcnn import STFTCNN
 from .wdcnnrnn import WDCNNRNN
+from .transformer import BaselineTransformer
 
-__all__ = ["WDCNN", "TICNN", "DCN", "SRDCNN", "STIMCNN", "STFTCNN", "WDCNNRNN"]
+__all__ = ["WDCNN", "TICNN", "DCN", "SRDCNN", "STIMCNN", "STFTCNN", "WDCNNRNN", "BaselineTransformer"]

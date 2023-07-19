@@ -1,4 +1,4 @@
-import fdob
+from . import fdob
 import torch
 import os
 import numpy as np
@@ -12,7 +12,7 @@ import json
 import copy
 from torch.utils.data import DataLoader
 
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 
 def train(
@@ -28,6 +28,7 @@ def train(
     random_seed: int,
     n_gpu: int,
     result_dir: str,
+    callbacks: List[pl.Callback]=None
 ):
     torch.use_deterministic_algorithms(True)
     torch.backends.cudnn.deterministic = True
@@ -47,10 +48,14 @@ def train(
         np.random.seed(random_seed)
         random.seed(random_seed)
 
-    if model_kwargs is not None:
-        model_train = model(**model_kwargs)
+    if not isinstance(model, torch.nn.Module):
+        if model_kwargs is not None:
+            model_train = model(**model_kwargs)
+        else:
+            model_train = model()
     else:
-        model_train = model()
+        model_train = model
+
     if opt_kwargs is not None:
         optim = opt(model_train.parameters(), **opt_kwargs)
     else:
@@ -70,13 +75,19 @@ def train(
         save_top_k=1,
         mode="min",
     )
+
+    if callbacks is not None:
+        callbacks.append(callback)
+    else:
+        callbacks = [callback]
+
     trainer = pl.Trainer(
         accelerator='gpu', 
         devices=[n_gpu],
         max_epochs=n_epochs,
         val_check_interval=n_steps_d,
         default_root_dir=f"{result_dir}",
-        callbacks=[callback],
+        callbacks=callbacks,
         logger=logger
     )
     trainer.fit(
@@ -133,10 +144,14 @@ def test(
         np.random.seed(random_seed)
         random.seed(random_seed)
 
-    if model_kwargs is not None:
-        model_train = model(**model_kwargs)
+    if not isinstance(model, torch.nn.Module):
+        if model_kwargs is not None:
+            model_train = model(**model_kwargs)
+        else:
+            model_train = model()
     else:
-        model_train = model()
+        model_train = model
+        
     if opt_kwargs is not None:
         optim = opt(model_train.parameters(), **opt_kwargs)
     else:
