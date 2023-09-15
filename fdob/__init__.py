@@ -8,6 +8,7 @@ from .dataset import get_dataloader
 from .download import download_cwru
 from .download import download_mfpt
 from .download import download_paderborn
+from .download import download_ottawa
 
 from .trainmodule import PlModule
 from .paramsampler import log_qsample

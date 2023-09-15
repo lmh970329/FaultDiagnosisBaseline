@@ -457,3 +457,118 @@ def download_mfpt(root: str) -> pd.DataFrame:
     data_frame = pd.DataFrame(df)
 
     return data_frame
+
+def download_ottawa(root: str) -> pd.DataFrame:
+
+    url = "https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/v43hmbwxpm-2.zip"
+    zipname = "ottawa.zip"
+
+    foldernames = {
+        "N": "1 Data collected from a healthy bearing",
+        "IR": "2 Data collected from a bearing with inner race fault",
+        "OR": "3 Data collected from a bearing with outer race fault",
+        "B": "4 Data collected from a bearing with ball fault",
+        "IRORB": "5 Data collected from a bearing with a combination of faults"
+    }
+
+    filenames = {
+        "B": [
+            "B-A-1.mat",
+            "B-A-2.mat",
+            "B-A-3.mat",
+            "B-B-1.mat",
+            "B-B-2.mat",
+            "B-B-3.mat",
+            "B-C-1.mat",
+            "B-C-2.mat",
+            "B-C-3.mat",
+            "B-D-1.mat",
+            "B-D-2.mat",
+            "B-D-3.mat",
+        ],
+        "N": [
+            "H-A-1.mat",
+            "H-A-2.mat",
+            "H-A-3.mat",
+            "H-B-1.mat",
+            "H-B-2.mat",
+            "H-B-3.mat",
+            "H-C-1.mat",
+            "H-C-2.mat",
+            "H-C-3.mat",
+            "H-D-1.mat",
+            "H-D-2.mat",
+            "H-D-3.mat",
+        ],
+        "IR": [
+            "I-A-1.mat",
+            "I-A-2.mat",
+            "I-A-3.mat",
+            "I-B-1.mat",
+            "I-B-2.mat",
+            "I-B-3.mat",
+            "I-C-1.mat",
+            "I-C-2.mat",
+            "I-C-3.mat",
+            "I-D-1.mat",
+            "I-D-2.mat",
+            "I-D-3.mat",
+        ],
+        "OR": [
+            "O-A-1.mat",
+            "O-A-2.mat",
+            "O-A-3.mat",
+            "O-B-1.mat",
+            "O-B-2.mat",
+            "O-B-3.mat",
+            "O-C-1.mat",
+            "O-C-2.mat",
+            "O-C-3.mat",
+            "O-D-1.mat",
+            "O-D-2.mat",
+            "O-D-3.mat",
+        ],
+        "IRORB": [
+            "C-A-1.mat",
+            "C-A-2.mat",
+            "C-A-3.mat",
+            "C-B-1.mat",
+            "C-B-2.mat",
+            "C-B-3.mat",
+            "C-C-1.mat",
+            "C-C-2.mat",
+            "C-C-3.mat",
+            "C-D-1.mat",
+            "C-D-2.mat",
+            "C-D-3.mat",
+        ],
+    }
+
+    label_map = {"N": 0, "B": 1, "IR": 2, "OR": 3, "IRORB": 4}
+
+    if not os.path.isdir(root):
+        os.makedirs(root)
+        os.system(f"wget -O {root}/{zipname} {url}")
+        with zipfile.ZipFile(f"{root}/{zipname}", "r") as f:
+            f.extractall(f"{root}")
+        for fault_type, foldername in foldernames.items():
+            os.rename(f"{root}/{foldername}", f"{root}/{fault_type}")
+        os.remove(f"{root}/{zipname}")
+    else:
+        print("File is already existed, use existed file.")
+
+    df = {}
+    df["data"] = []
+    df["fault_type"] = []
+    df["label"] = []
+    for s in filenames:
+        fault_type = s
+        for matfile in filenames[s]:
+            aa = io.loadmat(f"{root}/{fault_type}/{matfile}")
+            df["data"].append(aa["Channel_1"].ravel())
+            df["fault_type"].append(fault_type)
+            df["label"].append(label_map[fault_type])
+
+    data_frame = pd.DataFrame(df)
+
+    return data_frame

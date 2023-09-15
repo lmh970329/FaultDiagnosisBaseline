@@ -156,3 +156,10 @@ class FFT:
 
     def __call__(self, x):
         return torch.abs(torch.fft.fft(x))
+
+
+class InfinityNorm:
+
+    def __call__(self, x):
+        x_max = torch.max(torch.abs(x))
+        return x / x_max

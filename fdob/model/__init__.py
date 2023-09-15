@@ -1,4 +1,5 @@
-from .wdcnn import WDCNN
+# from .wdcnn import WDCNN
+from .wdcnn_actdrop import WDCNN
 from .ticnn import TICNN
 from .dcn import DCN
 from .srdcnn import SRDCNN
