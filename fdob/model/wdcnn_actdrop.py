@@ -16,7 +16,7 @@ class WDCNN(nn.Module):
      Sensors, vol. 17, no. 2, p. 425, 2017, doi: 10.3390/s17020425.
     """
 
-    def __init__(self, first_kernel: int = 64, n_classes: int = 10, information_ratio: float = None, drop_type: str = 'channel', drop_rate=0., score_type='max', activation=True) -> None:
+    def __init__(self, first_kernel: int = 64, n_classes: int = 10, information_ratio: float = None, drop_type: str = 'channel', drop_rate=0., score_type='max', act_layer=True) -> None:
         """
         Parameters
         ----------
@@ -47,7 +47,7 @@ class WDCNN(nn.Module):
             else:
                 raise ValueError(f"Not supported activation drop type : '{drop_type}'")
 
-        act_layer = nn.ReLU if activation else None
+        act_layer = nn.ReLU if act_layer else None
 
         self.conv_layers = nn.Sequential(
             # Conv1

@@ -3,8 +3,8 @@ from .wdcnn_actdrop import WDCNN
 from .ticnn import TICNN
 from .dcn import DCN
 from .srdcnn import SRDCNN
-from .stimcnn import STIMCNN
-from .stftcnn import STFTCNN
+from .stimcnn_actdrop import STIMCNN
+from .stftcnn_actdrop import STFTCNN
 from .wdcnnrnn import WDCNNRNN
 from .transformer import BaselineTransformer
 
