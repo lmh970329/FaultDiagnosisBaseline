@@ -80,8 +80,8 @@ model = {
         "sample_length": 1024,
         "tf": [processing.NpToTensor(), processing.ToSignal()],
     },
-    "transformer": {
-        "model": model.BaselineTransformer,
+    "stransformer": {
+        "model": model.STransformer,
         "sample_length": 2048,
         "tf": [processing.NpToTensor(), processing.ToSignal()],
     }
